@@ -1,0 +1,160 @@
+"""
+Direct the client to resolve this field locally, either from the cache or local resolvers.
+"""
+directive @client(
+  """
+  When true, the client will never use the cache for this value. See
+  https://www.apollographql.com/docs/react/essentials/local-state/#forcing-resolvers-with-clientalways-true
+  """
+  always: Boolean
+) on FIELD | FRAGMENT_DEFINITION | INLINE_FRAGMENT
+
+"""
+Export this locally resolved field as a variable to be used in the remainder of this query. See
+https://www.apollographql.com/docs/react/essentials/local-state/#using-client-fields-as-variables
+"""
+directive @export(
+  """The variable name to export this field as."""
+  as: String!
+) on FIELD
+
+"""
+Specify a custom store key for this result. See
+https://www.apollographql.com/docs/react/advanced/caching/#the-connection-directive
+"""
+directive @connection(
+  """Specify the store key."""
+  key: String!
+
+  """
+  An array of query argument names to include in the generated custom store key.
+  """
+  filter: [String!]
+) on FIELD
+
+type User {
+  id: Int!
+  nickname: String!
+  phoneNumber: String
+  email: String
+  thumbnail: String
+  birthDate: DateTime!
+  gender: UserGender
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+enum UserGender {
+  MALE
+  FEMALE
+}
+
+type CreateUserOutput {
+  data: User!
+  token: String!
+}
+
+type FindAllUserOutput {
+  data: [User!]
+  curPage: Int!
+  totalPage: Int!
+  hasNextPage: Boolean!
+}
+
+type GetGeoOutput {
+  range: [Int!]!
+  country: String!
+  region: String!
+  eu: String!
+  timezone: String!
+  city: String!
+  ll: [Int!]!
+  metro: Int!
+  area: Int!
+}
+
+type Query {
+  hello: String!
+  getGeo: GetGeoOutput!
+  me: User!
+  logInUser(input: LogInUserInput!): String!
+  findAllUser(input: FindAllUserInput!): FindAllUserOutput!
+  findOneUser(input: FindOneUserInput!): User!
+}
+
+input LogInUserInput {
+  nickname: String
+  phoneNumber: String
+  password: String!
+}
+
+input FindAllUserInput {
+  pageNumber: Int = 1
+  take: Int = 10
+  nickname: String
+  email: String
+  gender: UserGender
+}
+
+input FindOneUserInput {
+  id: Int
+  nickname: String
+  email: String
+}
+
+type Mutation {
+  sendVerifyCodeUser(input: SendVerifyCodeUserInput!): Boolean!
+  checkVerifyCodeUser(input: CheckVerifyCodeUserInput!): Boolean!
+  createUser(input: CreateUserInput!): CreateUserOutput!
+  updateUser(input: UpdateUserInput!): User!
+  removeUser(input: RemoveUserInput!): Boolean!
+  restoreUser(input: RestoreUserInput!): Boolean!
+}
+
+input SendVerifyCodeUserInput {
+  phoneNumber: String
+  email: String
+}
+
+input CheckVerifyCodeUserInput {
+  phoneNumber: String
+  email: String
+  verifyCode: String!
+}
+
+input CreateUserInput {
+  nickname: String!
+  birthDate: DateTime!
+  gender: UserGender
+  oauthId: String
+  password: String!
+}
+
+input UpdateUserInput {
+  birthDate: DateTime
+  gender: UserGender
+  password: String
+  nickname: String
+  phoneNumber: String
+  email: String
+  thumbnail: Upload
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
+input RemoveUserInput {
+  """회원탈퇴/복구 이유"""
+  reason: String
+}
+
+input RestoreUserInput {
+  """회원탈퇴/복구 이유"""
+  reason: String
+  nickname: String
+  phoneNumber: String
+  password: String!
+}
