@@ -3,8 +3,9 @@ import { AppProps } from "next/app";
 import { Provider } from "react-redux";
 import { ApolloProvider } from "@apollo/client";
 import { appWithTranslation } from "next-i18next";
-import { initializeApollo } from "~/lib/apollo";
+import { initializeApollo } from "~/apollo";
 import store from "~/redux/store";
+import withAuth from "~/lib/hoc/withAuth";
 import "../styles/globals.css";
 
 function MyApp({ Component, pageProps }: AppProps): JSX.Element {
@@ -18,4 +19,4 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   );
 }
 
-export default appWithTranslation(MyApp);
+export default appWithTranslation(withAuth(MyApp));
