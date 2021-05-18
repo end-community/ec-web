@@ -1,3 +1,19 @@
+### setup
+
+- using `superplate`
+- select below tech
+  - TailwindCSS
+  - CSS / styled-jsx
+  - Environment Variables
+  - Apollo GraphQL
+  - react-use
+  - next-i18next
+  - ESLint
+  - Prettier
+  - Testing Library
+  - Cypress
+  - Docker
+
 # EC Client
 
 - Next
@@ -8,4 +24,3 @@
 - Apollo-client (GraphQL)
 - next-i18next
 - Cypress
-- ~~Redux / Redux-toolkit~~
