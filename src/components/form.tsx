@@ -15,28 +15,30 @@ interface FormProps {
   buttonColor?: ButtonProps["color"];
 }
 
-export const Form: React.FC<FormProps> = ({
-  children,
-  onSubmit,
-  schema,
-  buttonName,
-  buttonColor = "blue",
-}) => {
-  const methods = useForm({ resolver: yupResolver(schema), mode: "onChange" });
-  const { isDirty, isValid } = methods.formState;
-  return (
-    <FormProvider {...methods}>
-      <form className="flex flex-col" onSubmit={methods.handleSubmit(onSubmit)}>
-        {children}
-        <Button
-          type="submit"
-          className="mt-1"
-          color={buttonColor}
-          disabled={!isDirty || !isValid}
+export const Form: React.FC<FormProps> = React.memo(
+  ({ children, onSubmit, schema, buttonName, buttonColor = "blue" }) => {
+    const methods = useForm({
+      resolver: yupResolver(schema),
+      mode: "onChange",
+    });
+    const { isDirty, isValid } = methods.formState;
+    return (
+      <FormProvider {...methods}>
+        <form
+          className="flex flex-col"
+          onSubmit={methods.handleSubmit(onSubmit)}
         >
-          {buttonName}
-        </Button>
-      </form>
-    </FormProvider>
-  );
-};
+          {children}
+          <Button
+            type="submit"
+            className="mt-1"
+            color={buttonColor}
+            disabled={!isDirty || !isValid}
+          >
+            {buttonName}
+          </Button>
+        </form>
+      </FormProvider>
+    );
+  },
+);

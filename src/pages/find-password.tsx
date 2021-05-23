@@ -1,13 +1,10 @@
 import React from "react";
-import { SubmitHandler } from "react-hook-form";
 import { Form, Input, CenterFormLayout, Line, Link } from "~/components";
-import { FindPasswordFormData, findPasswordSchema } from "~/lib";
+import { findPasswordSchema } from "~/lib";
+import { useFindPassword } from "~/lib/hook/pages";
 
 const LogIn: React.FC = () => {
-  const onFormSubmit: SubmitHandler<FindPasswordFormData> = (data) => {
-    console.log(data);
-  };
-
+  const { onFormSubmit } = useFindPassword();
   return (
     <CenterFormLayout description="비밀번호 찾기">
       <Form

@@ -8,24 +8,20 @@ interface LinkProps extends NLinkProps {
   left?: boolean;
 }
 
-export const Link: React.FC<LinkProps> = ({
-  children,
-  className,
-  right,
-  left,
-  ...rest
-}) => (
-  <NLink {...rest}>
-    <div
-      className={`${clearList(left && "mr-auto", right && "ml-auto").join(
-        " ",
-      )} cursor-pointer`}
-    >
-      <a
-        className={`text-sm underline text-gray-500 hover:text-black ${className}`}
+export const Link: React.FC<LinkProps> = React.memo(
+  ({ children, className, right, left, ...rest }) => (
+    <NLink {...rest}>
+      <div
+        className={`${clearList(left && "mr-auto", right && "ml-auto").join(
+          " ",
+        )} cursor-pointer`}
       >
-        {children}
-      </a>
-    </div>
-  </NLink>
+        <a
+          className={`text-sm underline text-gray-500 hover:text-black ${className}`}
+        >
+          {children}
+        </a>
+      </div>
+    </NLink>
+  ),
 );

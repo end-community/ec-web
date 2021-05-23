@@ -1,9 +1,4 @@
-import { useRouter } from "next/dist/client/router";
 import React from "react";
-import { SubmitHandler } from "react-hook-form";
-import { FaFacebookSquare } from "react-icons/fa";
-import { FcGoogle } from "react-icons/fc";
-import { RiKakaoTalkFill } from "react-icons/ri";
 import {
   Button,
   Form,
@@ -12,48 +7,11 @@ import {
   Link,
   CenterFormLayout,
 } from "~/components";
-import { LogInFormData, logInSchema } from "~/lib";
+import { logInSchema } from "~/lib";
+import { useLogIn } from "~/lib/hook/pages";
 
 const LogIn: React.FC = () => {
-  const { push } = useRouter();
-  const onRegisterClick = () => push("/register");
-  const onFormSubmit: SubmitHandler<LogInFormData> = (data) => {
-    console.log(data);
-  };
-  const buttonList = [
-    {
-      children: (
-        <>
-          <FcGoogle className="absolute left-0 text-2xl" />
-          구글로 로그인
-        </>
-      ),
-      color: "white",
-      onClick: onRegisterClick,
-    },
-    {
-      children: (
-        <>
-          <FaFacebookSquare className="absolute left-0 text-2xl text-blue-800" />
-          페이스북으로 로그인
-        </>
-      ),
-      color: "white",
-      onClick: onRegisterClick,
-    },
-    {
-      children: (
-        <>
-          <RiKakaoTalkFill className="absolute left-0 text-2xl text-yellow-400" />
-          카카오로 로그인
-        </>
-      ),
-      color: "white",
-      onClick: onRegisterClick,
-    },
-    { children: "회원가입", color: "green", onClick: onRegisterClick },
-  ] as const;
-
+  const { onFormSubmit, buttonList } = useLogIn();
   return (
     <CenterFormLayout description="로그인">
       <Form onSubmit={onFormSubmit} schema={logInSchema} buttonName="로그인">
