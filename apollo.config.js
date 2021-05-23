@@ -1,6 +1,6 @@
 module.exports = {
   client: {
-    includes: ["./src/gql/*.ts"],
+    includes: ["./src/lib/gql/*.ts", "./src/lib/fragment/*.ts"],
     tagName: "gql",
     service: {
       name: "ec-server",

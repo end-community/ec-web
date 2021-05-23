@@ -6,7 +6,7 @@ let apolloClient: ApolloClient<NormalizedCacheObject> | null = null;
 
 const createApolloClient = new ApolloClient({
   ssrMode: typeof window === "undefined",
-  uri: process.env.NEXT_PUBLIC_SERVER_URI,
+  uri: process.env.NEXT_PUBLIC_SERVER_URI + "/graphql",
   connectToDevTools: process.env.NODE_ENV === "development",
   cache,
   link,

@@ -1,11 +1,9 @@
 import { createHttpLink, from } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
-import { createPersistedQueryLink } from "@apollo/client/link/persisted-queries";
-import { sha256 } from "crypto-hash";
 
 const httpLink = createHttpLink({
-  uri: process.env.NEXT_PUBLIC_SERVER_URI,
-  credentials: "same-origin",
+  uri: process.env.NEXT_PUBLIC_SERVER_URI + "/graphql",
+  credentials: "include",
 });
 
 const authLink = setContext((_, { headers }) => {
@@ -13,14 +11,9 @@ const authLink = setContext((_, { headers }) => {
   return {
     headers: {
       ...headers,
-      authorization: token ? `Bearer ${token}` : "",
+      ...(token && { authorization: `Bearer ${token}` }),
     },
   };
 });
 
-const persistedQueryLink = createPersistedQueryLink({
-  sha256,
-  useGETForHashedQueries: true,
-});
-
-export default from([persistedQueryLink, authLink, httpLink]);
+export default from([authLink, httpLink]);

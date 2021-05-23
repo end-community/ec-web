@@ -38,7 +38,7 @@ type User {
   phoneNumber: String
   email: String
   thumbnail: String
-  birthDate: DateTime!
+  birthDate: DateTime
   gender: UserGender
 }
 
@@ -126,8 +126,7 @@ input CheckVerifyCodeUserInput {
 }
 
 input CreateUserInput {
-  nickname: String!
-  birthDate: DateTime!
+  birthDate: DateTime
   gender: UserGender
   oauthId: String
   password: String!
