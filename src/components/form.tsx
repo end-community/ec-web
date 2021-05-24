@@ -1,3 +1,4 @@
+import { ApolloError } from "@apollo/client";
 import { yupResolver } from "@hookform/resolvers/yup";
 import React from "react";
 import {
@@ -9,14 +10,18 @@ import {
 import { Button, ButtonProps } from "~/components";
 
 interface FormProps {
-  onSubmit: SubmitHandler<FieldValues>;
+  onSubmit?: SubmitHandler<FieldValues>;
   schema: any;
-  buttonName?: string;
-  buttonColor?: ButtonProps["color"];
+  button?: {
+    name?: string;
+    color?: ButtonProps["color"];
+    loading?: boolean;
+  };
+  error?: ApolloError;
 }
 
 export const Form: React.FC<FormProps> = React.memo(
-  ({ children, onSubmit, schema, buttonName, buttonColor = "blue" }) => {
+  ({ children, onSubmit, schema, button: { name, color, loading }, error }) => {
     const methods = useForm({
       resolver: yupResolver(schema),
       mode: "onChange",
@@ -28,14 +33,16 @@ export const Form: React.FC<FormProps> = React.memo(
           className="flex flex-col"
           onSubmit={methods.handleSubmit(onSubmit)}
         >
+          {error && <p className="text-red-600 text-center">{error.message}</p>}
           {children}
           <Button
             type="submit"
             className="mt-1"
-            color={buttonColor}
+            color={color}
             disabled={!isDirty || !isValid}
+            loading={loading}
           >
-            {buttonName}
+            {name}
           </Button>
         </form>
       </FormProvider>

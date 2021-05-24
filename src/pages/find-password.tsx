@@ -10,11 +10,10 @@ const LogIn: React.FC = () => {
       <Form
         onSubmit={onFormSubmit}
         schema={findPasswordSchema}
-        buttonName="비밀번호 재설정 코드 보내기"
+        button={{ name: "비밀번호 재설정 코드 보내기" }}
       >
         <Input name="phoneNumber" placeholder="PhoneNumber" />
       </Form>
-      <Line />
       <Link href="/login" right>
         로그인하러 가기
       </Link>

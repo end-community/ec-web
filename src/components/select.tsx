@@ -7,7 +7,7 @@ interface SelectProps
     HTMLSelectElement
   > {
   name: string;
-  options: any[];
+  options: { value: any; label?: any }[];
 }
 
 export const Select: React.FC<SelectProps> = React.memo(
@@ -17,7 +17,7 @@ export const Select: React.FC<SelectProps> = React.memo(
       formState: { errors },
     } = useFormContext();
     return (
-      <div className="relative">
+      <div className="relative my-2">
         <select
           {...register(name)}
           className={`w-full px-3 pb-2 pt-3 border rounded focus:outline-none appearance-none
@@ -27,10 +27,10 @@ export const Select: React.FC<SelectProps> = React.memo(
           {options.map((option) => (
             <option
               placeholder="year"
-              key={`select-${name}__${option}`}
-              value={option}
+              key={`select-${name}__${option.value}`}
+              value={option.value}
             >
-              {option}
+              {option.label || option.value}
             </option>
           ))}
         </select>

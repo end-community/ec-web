@@ -14,7 +14,11 @@ const LogIn: React.FC = () => {
   const { onFormSubmit, buttonList } = useLogIn();
   return (
     <CenterFormLayout description="로그인">
-      <Form onSubmit={onFormSubmit} schema={logInSchema} buttonName="로그인">
+      <Form
+        onSubmit={onFormSubmit}
+        schema={logInSchema}
+        button={{ name: "로그인" }}
+      >
         <Input
           autoComplete="username"
           name="id"
