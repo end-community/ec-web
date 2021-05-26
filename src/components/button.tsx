@@ -6,35 +6,31 @@ export interface ButtonProps
     React.ButtonHTMLAttributes<HTMLButtonElement>,
     HTMLButtonElement
   > {
-  color?: "blue" | "purple" | "green" | "white";
+  color?: "blue" | "purple" | "green" | "red" | "yellow" | "white";
   loading?: boolean;
 }
 
 export const Button: React.FC<ButtonProps> = React.memo(
   ({
+    color = "blue",
+    loading,
     className = "",
     children,
-    color = "blue",
     disabled,
-    loading,
     ...rest
   }) => {
     const buttonColor = useMemo(() => {
       if (disabled) return "bg-gray-200 text-gray-400 cursor-not-allowed";
       switch (color) {
-        case "blue":
-          return "bg-blue-500 hover:bg-blue-600 ring-opacity-75 ring-blue-500 text-white";
-        case "purple":
-          return "bg-purple-500 hover:bg-purple-600 ring-opacity-75 ring-purple-500 text-white";
-        case "green":
-          return "bg-green-500 hover:bg-green-600 ring-opacity-75 ring-green-500 text-white";
         case "white":
           return "border bg-gray-100 hover:bg-gray-200 text-black";
+        default:
+          return `bg-${color}-500 hover:bg-${color}-600 ring-opacity-75 ring-${color}-500 text-white`;
       }
     }, [disabled, color, loading]);
     return (
       <button
-        className={`focus:outline-none transition ease-in-out duration-150 rounded-md py-2 px-4 focus:ring ${buttonColor} ${className}`}
+        className={` focus:outline-none transition ease-in-out duration-150 rounded-md py-2 px-4 focus:ring ${buttonColor} ${className}`}
         {...rest}
       >
         <p className="relative flex justify-center">

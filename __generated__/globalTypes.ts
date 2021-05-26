@@ -12,6 +12,13 @@ export enum UserGender {
   MALE = "MALE",
 }
 
+export enum UserProvider {
+  FACEBOOK = "FACEBOOK",
+  GOOGLE = "GOOGLE",
+  KAKAO = "KAKAO",
+  LOCAL = "LOCAL",
+}
+
 export interface CheckVerifyCodeUserInput {
   phoneNumber?: string | null;
   email?: string | null;
@@ -19,9 +26,10 @@ export interface CheckVerifyCodeUserInput {
 }
 
 export interface CreateUserInput {
-  phoneNumber?: string | null;
+  phoneNumber: string;
   birthDate?: any | null;
   gender?: UserGender | null;
+  provider: UserProvider;
   oauthId?: string | null;
   password: string;
 }

@@ -13,7 +13,7 @@ export interface createUserMutation_createUser_data {
   __typename: "User";
   id: number;
   nickname: string;
-  phoneNumber: string | null;
+  phoneNumber: string;
   email: string | null;
   thumbnail: string | null;
   birthDate: any | null;

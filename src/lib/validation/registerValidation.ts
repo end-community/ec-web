@@ -11,11 +11,11 @@ export interface RegisterFormData {
   gender: UserGender;
 }
 const registerSchema = {
-  stepOne: yup.object().shape({
+  stepTwo: yup.object().shape({
     phoneNumber: yup.string().trim().required(),
     verifyCode: yup.string().trim().max(6).required(),
   }),
-  stepTwo: yup.object().shape({
+  stepThree: yup.object().shape({
     password: yup
       .string()
       .trim()

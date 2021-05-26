@@ -1,103 +1,109 @@
-import { UserGender } from "@/__generated__/globalTypes";
-import React, { useEffect } from "react";
-import {
-  Form,
-  CenterFormLayout,
-  Link,
-  Input,
-  Select,
-  Radio,
-  Button,
-} from "~/components";
-import { getBirthDate, RegisterSchema, useRegister } from "~/lib";
+import { UserProvider } from "@/__generated__/globalTypes";
+import React, { useMemo } from "react";
+import { SubmitHandler } from "react-hook-form";
+import { Form, CenterFormLayout, Link } from "~/components";
+import { StepTwo, StepThree } from "~/components/pages/register";
+import { StepOne } from "~/components/pages/register/stepOne";
+import { RegisterSchema, useRegister, RegisterFormData } from "~/lib";
+import { CtxProvider } from "~/lib/context";
 
 const Register: React.FC = () => {
   const {
     step,
-    createUserMutationLoading,
-    sendVerifyCodeUserMutationLoading,
-    sendVerifyCodeUserMutationError,
-    checkVerifyCodeUserMutationLoading,
-    onFormSubmit,
-    onInputChange,
-    onSendCodeClick,
+    setStep,
     _phoneNumber,
+    setPhoneNumber,
+    oauthProfile,
+    setOauthProfile,
+    createUserMutation,
+    sendVerifyCodeUserMutation,
+    checkVerifyCodeUserMutation,
   } = useRegister();
-  useEffect(() => {
-    console.log(sendVerifyCodeUserMutationError);
-  }, [sendVerifyCodeUserMutationError]);
+
+  const onInputChange = (e) => setPhoneNumber(e.target.value);
+  const onSendCodeClick = () => {
+    sendVerifyCodeUserMutation[0]({
+      variables: { input: { phoneNumber: _phoneNumber } },
+    });
+  };
+  const onFormSubmit: SubmitHandler<RegisterFormData> = async ({
+    verifyCode,
+    phoneNumber,
+    year,
+    month,
+    date,
+    password,
+    gender,
+  }) => {
+    switch (step) {
+      case 2:
+        await checkVerifyCodeUserMutation[0]({
+          variables: { input: { verifyCode } },
+        });
+        setStep(3);
+        break;
+      case 3:
+        createUserMutation[0]({
+          variables: {
+            input: {
+              phoneNumber,
+              password,
+              birthDate: new Date().setFullYear(year, month, date),
+              gender,
+              ...(oauthProfile || { provider: UserProvider.LOCAL }),
+            },
+          },
+        });
+        break;
+      default:
+        return null;
+    }
+  };
+
+  const renderByStep = useMemo(() => {
+    switch (step) {
+      case 1:
+        return <StepOne setStep={setStep} />;
+      case 2:
+        return (
+          <Form
+            onSubmit={onFormSubmit}
+            schema={RegisterSchema.stepTwo}
+            button={{
+              name: "인증 코드 확인",
+              color: "green",
+              loading: checkVerifyCodeUserMutation[1].loading,
+            }}
+          >
+            <StepTwo
+              onChange={onInputChange}
+              onClick={onSendCodeClick}
+              loading={sendVerifyCodeUserMutation[1].loading}
+              phoneNumber={_phoneNumber}
+            />
+          </Form>
+        );
+      case 3:
+        <Form
+          onSubmit={onFormSubmit}
+          schema={RegisterSchema.stepThree}
+          button={{
+            name: "회원가입",
+            color: "green",
+            loading: createUserMutation[1].loading,
+          }}
+        >
+          <StepThree />
+        </Form>;
+        return;
+    }
+  }, [step]);
+
   return (
     <CenterFormLayout description="회원가입">
-      <Form
-        onSubmit={onFormSubmit}
-        schema={step === 1 ? RegisterSchema.stepOne : RegisterSchema.stepTwo}
-        button={{
-          name: step === 1 ? "인증 코드 확인" : "회원가입",
-          color: "green",
-          loading:
-            step === 1
-              ? checkVerifyCodeUserMutationLoading
-              : createUserMutationLoading,
-        }}
-      >
-        {step === 1 ? (
-          <>
-            <div className="grid grid-cols-3 gap-3">
-              <Input
-                onChange={onInputChange}
-                divclsName="col-span-2"
-                name="phoneNumber"
-                placeholder="Phone Number"
-              />
-              <Button
-                type="button"
-                className="my-2"
-                onClick={onSendCodeClick}
-                loading={sendVerifyCodeUserMutationLoading}
-                disabled={_phoneNumber.length <= 10}
-              >
-                코드 발송
-              </Button>
-            </div>
-            <Input defaultValue="" name="verifyCode" placeholder="code" />
-          </>
-        ) : (
-          <>
-            <Input
-              autoComplete="new-password"
-              type="password"
-              name="password"
-              placeholder="New Password"
-            />
-            <div className="grid grid-cols-3 gap-3 my-2">
-              {[
-                {
-                  name: "year",
-                  options: getBirthDate("year").map((value) => ({ value })),
-                },
-                {
-                  name: "month",
-                  options: getBirthDate("month").map((value) => ({ value })),
-                },
-                {
-                  name: "date",
-                  options: getBirthDate("date").map((value) => ({ value })),
-                },
-              ].map(({ name, options }) => (
-                <Select key={`select-${name}`} name={name} options={options} />
-              ))}
-            </div>
-            <div className="flex justify-around items-center my-2">
-              <Radio name="gender" className="w-1/3" value={UserGender.FEMALE}>
-                Female
-              </Radio>
-              <Radio name="gender" className="w-1/3" value={UserGender.MALE}>
-                Male
-              </Radio>
-            </div>
-          </>
-        )}
-      </Form>
+      <CtxProvider value={{ setOauthProfile }} ctxName="registerPage">
+        {renderByStep}
+      </CtxProvider>
       <Link href="/login" right>
         로그인하러 가기
       </Link>

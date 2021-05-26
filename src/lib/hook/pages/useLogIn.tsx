@@ -1,11 +1,13 @@
 import { useRouter } from "next/dist/client/router";
 import { SubmitHandler } from "react-hook-form";
-import { LogInFormData } from "~/lib/validation";
 import { FaFacebookSquare } from "react-icons/fa";
-import { FcGoogle } from "react-icons/fc";
-import { RiKakaoTalkFill } from "react-icons/ri";
+import { AiOutlineGoogle } from "react-icons/ai";
+import { LogInFormData } from "~/lib/validation";
+import { useGoogleLogIn, useFacebookLogIn } from "../common";
 
 const useLogIn = () => {
+  const { onGoogleClick } = useGoogleLogIn();
+  const { onFacebookClick } = useFacebookLogIn();
   const { push } = useRouter();
   const onRegisterClick = () => push("/register");
   const onFormSubmit: SubmitHandler<LogInFormData> = (data) => {
@@ -15,32 +17,22 @@ const useLogIn = () => {
     {
       children: (
         <>
-          <FcGoogle className="absolute left-0 text-2xl" />
+          <AiOutlineGoogle className="absolute left-0 text-2xl" />
           구글로 로그인
         </>
       ),
-      color: "white",
-      onClick: onRegisterClick,
+      color: "red",
+      onClick: onGoogleClick,
     },
     {
       children: (
         <>
-          <FaFacebookSquare className="absolute left-0 text-2xl text-blue-800" />
+          <FaFacebookSquare className="absolute left-0 text-2xl" />
           페이스북으로 로그인
         </>
       ),
-      color: "white",
-      onClick: onRegisterClick,
-    },
-    {
-      children: (
-        <>
-          <RiKakaoTalkFill className="absolute left-0 text-2xl text-yellow-400" />
-          카카오로 로그인
-        </>
-      ),
-      color: "white",
-      onClick: onRegisterClick,
+      color: "blue",
+      onClick: onFacebookClick,
     },
     { children: "회원가입", color: "green", onClick: onRegisterClick },
   ] as const;
