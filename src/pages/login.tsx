@@ -1,4 +1,8 @@
 import React from "react";
+import { useRouter } from "next/router";
+import { SubmitHandler } from "react-hook-form";
+import { FaFacebookSquare } from "react-icons/fa";
+import { AiOutlineGoogle } from "react-icons/ai";
 import {
   Button,
   Form,
@@ -7,11 +11,46 @@ import {
   Link,
   CenterFormLayout,
 } from "~/components";
-import { logInSchema } from "~/lib";
-import { useLogIn } from "~/lib/hook/pages";
+import { LogInFormData, logInSchema, useLogIn } from "~/lib";
 
-const LogIn: React.FC = () => {
-  const { onFormSubmit, buttonList } = useLogIn();
+const LogInPage: React.FC = () => {
+  const { onGoogleClick, googleBtnDisabled, onFacebookClick, fbBtnDisabled } =
+    useLogIn();
+  const { push } = useRouter();
+  const onRegisterClick = () => push("/register");
+  const onFormSubmit: SubmitHandler<LogInFormData> = (data) => {
+    console.log(data);
+  };
+  const buttonList = [
+    {
+      children: (
+        <>
+          <AiOutlineGoogle className="absolute left-0 text-2xl" />
+          구글로 로그인
+        </>
+      ),
+      color: "red",
+      onClick: onGoogleClick,
+      disabled: googleBtnDisabled,
+    },
+    {
+      children: (
+        <>
+          <FaFacebookSquare className="absolute left-0 text-2xl" />
+          페이스북으로 로그인
+        </>
+      ),
+      color: "blue",
+      onClick: onFacebookClick,
+      disabled: fbBtnDisabled,
+    },
+    {
+      children: "회원가입",
+      color: "green",
+      onClick: onRegisterClick,
+      disabled: false,
+    },
+  ] as const;
   return (
     <CenterFormLayout description="로그인">
       <Form
@@ -32,11 +71,12 @@ const LogIn: React.FC = () => {
         />
       </Form>
       <Line />
-      {buttonList.map(({ children, color, onClick }, idx) => (
+      {buttonList.map(({ children, color, onClick, disabled }, idx) => (
         <Button
           key={`loginPage-button__${idx}`}
           color={color}
           onClick={onClick}
+          disabled={disabled}
         >
           {children}
         </Button>
@@ -47,4 +87,4 @@ const LogIn: React.FC = () => {
     </CenterFormLayout>
   );
 };
-export default LogIn;
+export default LogInPage;

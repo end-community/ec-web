@@ -1,9 +1,6 @@
 /* ./styles/globals.css */
 @tailwind base;
 @tailwind components;
-.input {
-  @apply focus:outline-none rounded py-2 px-4 text-lg focus:ring-2 focus:border-purple-300 ring-purple-300 border border-gray-200 my-2;
-}
 .flex-center {
   @apply flex justify-center items-center;
 }
@@ -15,6 +12,18 @@
 }
 .error-input {
   @apply border-2 border-red-400;
+}
+.bg-gradient-1 {
+  @apply bg-gradient-to-r from-purple-600 to-blue-400;
+}
+.Toastify__toast.Toastify__toast--default {
+  @apply rounded-xl;
+}
+.Toastify__toast.Toastify__toast--error {
+  @apply rounded-xl;
+}
+.Toastify__toast.Toastify__toast--success {
+  @apply rounded-xl;
 }
 
 @tailwind utilities;

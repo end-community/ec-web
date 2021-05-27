@@ -3,26 +3,14 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { CreateUserInput, UserGender } from "./globalTypes";
+import { CreateUserInput } from "./globalTypes";
 
 // ====================================================
 // GraphQL mutation operation: createUserMutation
 // ====================================================
 
-export interface createUserMutation_createUser_data {
-  __typename: "User";
-  id: number;
-  nickname: string;
-  phoneNumber: string;
-  email: string | null;
-  thumbnail: string | null;
-  birthDate: any | null;
-  gender: UserGender | null;
-}
-
 export interface createUserMutation_createUser {
   __typename: "CreateUserOutput";
-  data: createUserMutation_createUser_data;
   token: string;
 }
 

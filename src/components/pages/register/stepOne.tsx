@@ -1,35 +1,23 @@
 import React from "react";
 import { FaFacebookSquare } from "react-icons/fa";
 import { AiOutlineGoogle } from "react-icons/ai";
-import { Button } from "~/components/button";
-import { useFacebookLogIn, useGoogleLogIn } from "~/lib/hook/common";
+import { Button } from "~/components";
+import { useFacebookLogIn, useGoogleLogIn } from "~/lib";
 
 interface StepOneProps {
   setStep: React.Dispatch<React.SetStateAction<1 | 2 | 3>>;
 }
 
 export const StepOne: React.FC<StepOneProps> = ({ setStep }) => {
-  const { onGoogleClick } = useGoogleLogIn();
-  const { onFacebookClick } = useFacebookLogIn();
+  const { onGoogleClick, googleBtnDisabled } = useGoogleLogIn(setStep);
+  const { onFacebookClick, fbBtnDisabled } = useFacebookLogIn(setStep);
   return (
     <>
-      <Button
-        color="red"
-        onClick={() => {
-          onGoogleClick();
-          setStep(2);
-        }}
-      >
+      <Button color="red" onClick={onGoogleClick} disabled={googleBtnDisabled}>
         <AiOutlineGoogle className="absolute left-0 text-2xl" />
         구글로 회원가입
       </Button>
-      <Button
-        color="blue"
-        onClick={() => {
-          onFacebookClick();
-          setStep(2);
-        }}
-      >
+      <Button color="blue" onClick={onFacebookClick} disabled={fbBtnDisabled}>
         <FaFacebookSquare className="absolute left-0 text-2xl" />
         페이스북으로 회원가입
       </Button>

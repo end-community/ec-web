@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { useRouter } from "next/router";
 import {
   checkVerifyCodeUserMutation,
   checkVerifyCodeUserMutationVariables,
@@ -6,59 +8,78 @@ import {
   createUserMutation,
   createUserMutationVariables,
 } from "@/__generated__/createUserMutation";
-import { UserProvider } from "@/__generated__/globalTypes";
 import {
   sendVerifyCodeUserMutation,
   sendVerifyCodeUserMutationVariables,
 } from "@/__generated__/sendVerifyCodeUserMutation";
-import { useMutation } from "@apollo/client";
-import { useEffect, useState } from "react";
+import { useMutation, useReactiveVar } from "@apollo/client";
+import { geoVar } from "~/apollo/var";
 import {
   CREATE_USER_GQL,
   CHECK_VERIFY_CODE_USER_GQL,
   SEND_VERIFY_CODE_USER_GQL,
+  useCtx,
+  getErrRes,
 } from "~/lib";
-
-export interface OauthProfile {
-  oauthId: string;
-  email?: string;
-  provider: UserProvider.GOOGLE | UserProvider.FACEBOOK;
-}
-
+import { toast } from "react-toastify";
+// only ctx, state, gql request
 const useRegister = () => {
   // state
+  const [as] = useCtx();
+  const { push } = useRouter();
   const [step, setStep] = useState<1 | 2 | 3>(1);
-  const [oauthProfile, setOauthProfile] = useState<null | OauthProfile>(null);
   const [_phoneNumber, setPhoneNumber] = useState("");
-  useEffect(() => {
-    console.log(oauthProfile);
-  }, [oauthProfile]);
+  const [parsedPhoneNumber, setParsedPhoneNumber] = useState("");
+  const geo = useReactiveVar(geoVar);
   // gql
-  const createUserMutation = useMutation<
-    createUserMutation,
-    createUserMutationVariables
-  >(CREATE_USER_GQL, {
-    onCompleted: (data: createUserMutation) => {},
-  });
   const sendVerifyCodeUserMutation = useMutation<
     sendVerifyCodeUserMutation,
     sendVerifyCodeUserMutationVariables
   >(SEND_VERIFY_CODE_USER_GQL, {
-    onCompleted: (data: sendVerifyCodeUserMutation) => {},
+    onError: (error) => {
+      const { errCode } = getErrRes(error);
+      if (errCode === "2") {
+        toast("이미 가입된 번호입니다.", { type: toast.TYPE.ERROR });
+      }
+    },
+    onCompleted: () => {
+      toast("인증코드가 전송되었습니다.");
+    },
   });
   const checkVerifyCodeUserMutation = useMutation<
     checkVerifyCodeUserMutation,
     checkVerifyCodeUserMutationVariables
   >(CHECK_VERIFY_CODE_USER_GQL, {
-    onCompleted: (data: checkVerifyCodeUserMutation) => {},
+    onError: (error) => {
+      const { errCode } = getErrRes(error);
+      if (errCode === "1") {
+        toast("인증코드가 틀립니다.", { type: toast.TYPE.ERROR });
+      }
+    },
+    onCompleted: () => {
+      setStep(3);
+    },
   });
+  const createUserMutation = useMutation<
+    createUserMutation,
+    createUserMutationVariables
+  >(CREATE_USER_GQL, {
+    onCompleted: ({ createUser: { token } }) => {
+      localStorage.setItem("ect", token);
+      toast("환영합니다!");
+      push("/");
+    },
+  });
+  //
   return {
+    as,
     step,
     setStep,
-    oauthProfile,
-    setOauthProfile,
     _phoneNumber,
     setPhoneNumber,
+    parsedPhoneNumber,
+    setParsedPhoneNumber,
+    country: geo && geo.country,
     createUserMutation,
     sendVerifyCodeUserMutation,
     checkVerifyCodeUserMutation,

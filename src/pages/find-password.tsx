@@ -1,9 +1,9 @@
 import React from "react";
-import { Form, Input, CenterFormLayout, Line, Link } from "~/components";
+import { Form, Input, CenterFormLayout, Link } from "~/components";
 import { findPasswordSchema } from "~/lib";
-import { useFindPassword } from "~/lib/hook/pages";
+import { useFindPassword } from "~/lib";
 
-const LogIn: React.FC = () => {
+const FindPasswordPage: React.FC = () => {
   const { onFormSubmit } = useFindPassword();
   return (
     <CenterFormLayout description="비밀번호 찾기">
@@ -20,4 +20,4 @@ const LogIn: React.FC = () => {
     </CenterFormLayout>
   );
 };
-export default LogIn;
+export default FindPasswordPage;

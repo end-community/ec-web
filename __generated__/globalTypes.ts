@@ -27,6 +27,7 @@ export interface CheckVerifyCodeUserInput {
 
 export interface CreateUserInput {
   phoneNumber: string;
+  email?: string | null;
   birthDate?: any | null;
   gender?: UserGender | null;
   provider: UserProvider;

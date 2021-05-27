@@ -1,5 +1,5 @@
 import { SubmitHandler } from "react-hook-form";
-import { FindPasswordFormData } from "~/lib/validation";
+import { FindPasswordFormData } from "~/lib";
 
 const useLogIn = () => {
   const onFormSubmit: SubmitHandler<FindPasswordFormData> = (data) => {

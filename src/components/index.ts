@@ -11,3 +11,4 @@ export { Form } from "./form";
 export { Select } from "./select";
 export { Radio } from "./radio";
 export { Spinner } from "./spinner";
+export { Init } from "./init";

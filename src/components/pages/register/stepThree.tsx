@@ -1,8 +1,6 @@
 import { UserGender } from "@/__generated__/globalTypes";
 import React from "react";
-import { Input } from "~/components/input";
-import { Radio } from "~/components/radio";
-import { Select } from "~/components/select";
+import { Input, Radio, Select } from "~/components";
 import { getBirthDate } from "~/lib";
 
 export const StepThree: React.FC = () => (

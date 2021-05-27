@@ -19,10 +19,9 @@ class CustomDocument extends Document {
     return (
       <Html>
         <Head>
-          <script src="https://apis.google.com/js/api.js"></script>
+          <script async src="https://apis.google.com/js/api.js"></script>
           <script
             async
-            defer
             crossOrigin="anonymous"
             src="https://connect.facebook.net/en_US/sdk.js"
           ></script>

@@ -7,7 +7,7 @@ interface UserGender {
 export interface UserVar {
   id: number;
   nickname: string;
-  phoneNumber?: string;
+  phoneNumber: string;
   email?: string;
   thumbnail?: string;
   birthDate: Date;

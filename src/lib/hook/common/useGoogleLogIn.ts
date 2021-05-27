@@ -1,47 +1,27 @@
 import { UserProvider } from "@/__generated__/globalTypes";
 import { useCallback, useEffect, useState } from "react";
-import { useCtx } from "~/lib/context";
+import { useCtx } from "~/lib";
 
-interface GoogleProfile {
-  oauthId: string;
-  email: string;
-  provider: UserProvider.GOOGLE;
-}
-
-const useGoogleLogIn = () => {
-  const ctx = useCtx("registerPage", "useGoogleLogIn");
-  const [auth, setAuth] = useState<any>();
+const useGoogleLogIn = (
+  setStep: React.Dispatch<React.SetStateAction<1 | 2 | 3>>,
+) => {
+  const [as, setAs] = useCtx();
   const [clicked, setClicked] = useState(false);
-  const [profile, setProfile] = useState<GoogleProfile | null>(null);
   useEffect(() => {
-    window.gapi.load("client:auth2", () => {
-      window.gapi.auth2
-        .init({
-          client_id:
-            "232497509697-lk2pbtdbrnep23104me31m94gtqf8bi6.apps.googleusercontent.com",
-        })
-        .then(() => {
-          const auth = window.gapi.auth2.getAuthInstance();
-          setAuth(auth);
-        });
-    });
-  }, []);
-  useEffect(() => {
-    if (clicked && auth?.isSignedIn.fe) {
-      const { NT: oauthId, pu: email } = auth.currentUser.fe.Ft;
-      if (ctx) {
-        console.log(ctx);
-        ctx.setOauthProfile({ oauthId, email, provider: UserProvider.GOOGLE });
-      } else {
-        setProfile({ oauthId, email, provider: UserProvider.GOOGLE });
-      }
+    if (clicked && as?.gapiAuth?.isSignedIn.fe) {
+      const { NT: oauthId, pu: email } = as.gapiAuth.currentUser.fe.Ft;
+      setAs((s) => ({
+        ...s,
+        oauthProfile: { oauthId, email, provider: UserProvider.GOOGLE },
+      }));
+      if (setStep) setStep(2);
     }
-  }, [clicked]);
+  }, [clicked, as.gapiAuth]);
   const onGoogleClick = useCallback(() => {
-    auth.signIn();
+    as.gapiAuth.signIn();
     setClicked(true);
-  }, [auth]);
-  return { onGoogleClick, profile };
+  }, [as?.gapiAuth]);
+  return { onGoogleClick, googleBtnDisabled: !as?.gapiAuth };
 };
 
 export default useGoogleLogIn;

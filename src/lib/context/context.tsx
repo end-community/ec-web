@@ -1,31 +1,21 @@
 import React, { createContext, useContext } from "react";
-import { ContextProviderProps, RegisterPageOauth, Value } from "./context.d";
+import { CtxProviderProps } from "./context.d";
 
-export const ctxObj = {
-  registerPage: createContext<RegisterPageOauth>(null),
+const AppCtx = createContext<CtxProviderProps["value"]>(null);
+
+export const useCtx = () => {
+  const ctx = useContext(AppCtx);
+  if (!ctx) throw Error("ctx provider should be wrapped to use ctx");
+  return ctx;
 };
 
-export const useCtx = (
-  ctxName: keyof typeof ctxObj,
-  desc?: string,
-): null | Value => {
-  const ctx = useContext(ctxObj[ctxName]);
-  if (process.env.NODE_ENV === "development" && !ctx) {
-    console.log(
-      `${
-        desc ? `[${desc}] ` : ""
-      }context of ${ctxName} is null, should be wrapped provider`,
-    );
-  }
-  return ctx as null | Value;
+export const setAppState = (value: CtxProviderProps["value"]) => {
+  const [appState, setAppState] = useCtx();
+  setAppState({ ...appState, ...value });
 };
 
-const ctxProvider = ({
-  children,
-  ctxName,
-  value,
-}: ContextProviderProps): JSX.Element => {
-  const Ctx = ctxObj[ctxName];
-  return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
+const ctxProvider = ({ children, value }: CtxProviderProps): JSX.Element => {
+  return <AppCtx.Provider value={value}>{children}</AppCtx.Provider>;
 };
+
 export default ctxProvider;

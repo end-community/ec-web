@@ -1,65 +1,71 @@
 import { UserProvider } from "@/__generated__/globalTypes";
-import React, { useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import { SubmitHandler } from "react-hook-form";
 import { Form, CenterFormLayout, Link } from "~/components";
-import { StepTwo, StepThree } from "~/components/pages/register";
-import { StepOne } from "~/components/pages/register/stepOne";
-import { RegisterSchema, useRegister, RegisterFormData } from "~/lib";
-import { CtxProvider } from "~/lib/context";
+import { StepOne, StepTwo, StepThree } from "~/components/pages/register";
+import {
+  RegisterSchema,
+  useRegister,
+  RegisterFormData,
+  parsePhoneNumber,
+} from "~/lib";
 
-const Register: React.FC = () => {
+// only UI Render, UI Event, Variables
+const RegisterPage: React.FC = () => {
   const {
+    as,
     step,
     setStep,
     _phoneNumber,
     setPhoneNumber,
-    oauthProfile,
-    setOauthProfile,
+    parsedPhoneNumber,
+    setParsedPhoneNumber,
+    country,
     createUserMutation,
     sendVerifyCodeUserMutation,
     checkVerifyCodeUserMutation,
   } = useRegister();
 
-  const onInputChange = (e) => setPhoneNumber(e.target.value);
-  const onSendCodeClick = () => {
+  const onPhoneNumberChange = useCallback(
+    (e) => setPhoneNumber(e.target.value),
+    [],
+  );
+  const onSendCodeClick = useCallback(() => {
+    const phoneNumber = parsePhoneNumber(_phoneNumber, country);
+    setParsedPhoneNumber(phoneNumber);
     sendVerifyCodeUserMutation[0]({
-      variables: { input: { phoneNumber: _phoneNumber } },
+      variables: { input: { phoneNumber } },
     });
-  };
-  const onFormSubmit: SubmitHandler<RegisterFormData> = async ({
-    verifyCode,
-    phoneNumber,
-    year,
-    month,
-    date,
-    password,
-    gender,
-  }) => {
-    switch (step) {
-      case 2:
-        await checkVerifyCodeUserMutation[0]({
-          variables: { input: { verifyCode } },
-        });
-        setStep(3);
-        break;
-      case 3:
-        createUserMutation[0]({
-          variables: {
-            input: {
-              phoneNumber,
-              password,
-              birthDate: new Date().setFullYear(year, month, date),
-              gender,
-              ...(oauthProfile || { provider: UserProvider.LOCAL }),
+  }, [_phoneNumber, country]);
+  const onFormSubmit: SubmitHandler<RegisterFormData> = useCallback(
+    async ({ verifyCode, year, month, date, password, gender }) => {
+      switch (step) {
+        case 2:
+          await checkVerifyCodeUserMutation[0]({
+            variables: {
+              input: {
+                phoneNumber: parsedPhoneNumber,
+                verifyCode,
+              },
             },
-          },
-        });
-        break;
-      default:
-        return null;
-    }
-  };
-
+          });
+          break;
+        case 3:
+          const input = {
+            phoneNumber: parsedPhoneNumber,
+            password,
+            birthDate: new Date().setFullYear(year, month, date),
+            gender,
+            ...(as.oauthProfile || { provider: UserProvider.LOCAL }),
+          };
+          createUserMutation[0]({ variables: { input } });
+          break;
+        default:
+          return null;
+      }
+    },
+    [step, parsedPhoneNumber],
+  );
   const renderByStep = useMemo(() => {
     switch (step) {
       case 1:
@@ -76,38 +82,38 @@ const Register: React.FC = () => {
             }}
           >
             <StepTwo
-              onChange={onInputChange}
+              onChange={onPhoneNumberChange}
               onClick={onSendCodeClick}
               loading={sendVerifyCodeUserMutation[1].loading}
               phoneNumber={_phoneNumber}
+              called={sendVerifyCodeUserMutation[1].called}
             />
           </Form>
         );
       case 3:
-        <Form
-          onSubmit={onFormSubmit}
-          schema={RegisterSchema.stepThree}
-          button={{
-            name: "회원가입",
-            color: "green",
-            loading: createUserMutation[1].loading,
-          }}
-        >
-          <StepThree />
-        </Form>;
-        return;
+        return (
+          <Form
+            onSubmit={onFormSubmit}
+            schema={RegisterSchema.stepThree}
+            button={{
+              name: "회원가입",
+              color: "green",
+              loading: createUserMutation[1].loading,
+            }}
+          >
+            <StepThree />
+          </Form>
+        );
     }
-  }, [step]);
+  }, [step, _phoneNumber, sendVerifyCodeUserMutation[1]]);
 
   return (
     <CenterFormLayout description="회원가입">
-      <CtxProvider value={{ setOauthProfile }} ctxName="registerPage">
-        {renderByStep}
-      </CtxProvider>
+      {renderByStep}
       <Link href="/login" right>
         로그인하러 가기
       </Link>
     </CenterFormLayout>
   );
 };
-export default Register;
+export default RegisterPage;

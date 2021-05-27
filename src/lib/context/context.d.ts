@@ -1,15 +1,19 @@
+import { UserProvider } from "@/__generated__/globalTypes";
 import { Dispatch, SetStateAction } from "react";
-import { OauthProfile } from "../hook/pages/useRegister";
-import { ctxObj } from "./context";
 
-export type Value = RegisterPageOauth;
-
-export interface ContextProviderProps {
-  children: ReactNode;
-  ctxName: Readonly<keyof typeof ctxObj>;
-  value: Value;
+interface OauthProfile {
+  oauthId: string;
+  email?: string;
+  provider: UserProvider.GOOGLE | UserProvider.FACEBOOK;
 }
 
-export interface RegisterPageOauth {
-  setOauthProfile: Dispatch<SetStateAction<OauthProfile>>;
+export interface CtxProviderProps {
+  children: ReactNode;
+  value: [CtxValue, React.Dispatch<React.SetStateAction<CtxValue>>];
+}
+
+export interface CtxValue {
+  gapiAuth: any;
+  fbAuth: any;
+  oauthProfile: OauthProfile;
 }
