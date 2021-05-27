@@ -35,6 +35,12 @@ export interface CreateUserInput {
   password: string;
 }
 
+export interface LogInUserInput {
+  nickname?: string | null;
+  phoneNumber?: string | null;
+  password: string;
+}
+
 export interface SendVerifyCodeUserInput {
   phoneNumber?: string | null;
   email?: string | null;

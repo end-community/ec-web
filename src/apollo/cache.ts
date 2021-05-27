@@ -1,10 +1,11 @@
 import { InMemoryCache, TypePolicy } from "@apollo/client";
-import { user, geo } from "./var";
+import { user, geo, isLoggedIn } from "./var";
 
 const Query: TypePolicy = {
   fields: {
     user,
     geo,
+    isLoggedIn,
   },
 };
 

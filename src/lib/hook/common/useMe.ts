@@ -1,10 +1,12 @@
 import { meQuery } from "@/__generated__/meQuery";
-import { useQuery } from "@apollo/client";
+import { useQuery, useReactiveVar } from "@apollo/client";
+import { isLoggedInVar } from "~/apollo/var";
 import { ME_GQL } from "~/lib/gql";
 
-const useMe = (): meQuery | undefined => {
+const useMe = () => {
   const { data } = useQuery<meQuery>(ME_GQL);
-  return data as meQuery | undefined;
+  const isLoggedIn = useReactiveVar(isLoggedInVar);
+  return !isLoggedIn ? undefined : data;
 };
 
 export default useMe;

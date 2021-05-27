@@ -1,17 +1,15 @@
-import { useApolloClient } from "@apollo/client";
 import { useRouter } from "next/router";
 import React from "react";
+import { isLoggedInVar } from "~/apollo/var";
 import { Button, Logo } from "~/components";
-import { ME_GQL } from "~/lib/gql";
 import useMe from "~/lib/hook/common/useMe";
 
 export const Header: React.FC = React.memo(() => {
   const { push } = useRouter();
-  const client = useApolloClient();
   const data = useMe();
   const onLogOutClick = () => {
-    client.writeQuery({ query: ME_GQL, data: { data: { me: null } } });
     localStorage.removeItem("ect");
+    isLoggedInVar(false);
   };
   const onLogInClick = () => {
     push("/register");

@@ -13,7 +13,7 @@ import {
   sendVerifyCodeUserMutationVariables,
 } from "@/__generated__/sendVerifyCodeUserMutation";
 import { useMutation, useReactiveVar } from "@apollo/client";
-import { geoVar } from "~/apollo/var";
+import { geoVar, isLoggedInVar } from "~/apollo/var";
 import {
   CREATE_USER_GQL,
   CHECK_VERIFY_CODE_USER_GQL,
@@ -66,6 +66,7 @@ const useRegister = () => {
   >(CREATE_USER_GQL, {
     onCompleted: ({ createUser: { token } }) => {
       localStorage.setItem("ect", token);
+      isLoggedInVar(true);
       toast("환영합니다!");
       push("/");
     },

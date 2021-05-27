@@ -1,12 +1,7 @@
 import React, { useEffect } from "react";
 import { Header } from "~/components";
-import useMe from "~/lib/hook/common/useMe";
 
 const HomePage: React.FC = () => {
-  const me = useMe();
-  useEffect(() => {
-    console.log(me);
-  }, [me]);
   return (
     <div>
       <Header />

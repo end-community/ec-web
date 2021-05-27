@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useCtx } from "~/lib";
 
 const useGoogleLogIn = (
-  setStep: React.Dispatch<React.SetStateAction<1 | 2 | 3>>,
+  setStep?: React.Dispatch<React.SetStateAction<1 | 2 | 3>>,
 ) => {
   const [as, setAs] = useCtx();
   const [clicked, setClicked] = useState(false);

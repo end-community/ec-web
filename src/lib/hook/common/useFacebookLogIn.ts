@@ -3,7 +3,7 @@ import { useCallback } from "react";
 import { useCtx } from "~/lib";
 
 const useFacebookLogIn = (
-  setStep: React.Dispatch<React.SetStateAction<1 | 2 | 3>>,
+  setStep?: React.Dispatch<React.SetStateAction<1 | 2 | 3>>,
 ) => {
   const [as, setAs] = useCtx();
   const onFacebookClick = useCallback(() => {

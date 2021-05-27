@@ -1,5 +1,4 @@
 import React from "react";
-import { useRouter } from "next/router";
 import { SubmitHandler } from "react-hook-form";
 import { FaFacebookSquare } from "react-icons/fa";
 import { AiOutlineGoogle } from "react-icons/ai";
@@ -11,15 +10,24 @@ import {
   Link,
   CenterFormLayout,
 } from "~/components";
-import { LogInFormData, logInSchema, useLogIn } from "~/lib";
+import { LogInFormData, logInSchema, parsePhoneNumber, useLogIn } from "~/lib";
 
 const LogInPage: React.FC = () => {
-  const { onGoogleClick, googleBtnDisabled, onFacebookClick, fbBtnDisabled } =
-    useLogIn();
-  const { push } = useRouter();
+  const {
+    push,
+    onGoogleClick,
+    googleBtnDisabled,
+    onFacebookClick,
+    fbBtnDisabled,
+    country,
+    logInQuery,
+  } = useLogIn();
   const onRegisterClick = () => push("/register");
-  const onFormSubmit: SubmitHandler<LogInFormData> = (data) => {
-    console.log(data);
+  const onFormSubmit: SubmitHandler<LogInFormData> = ({ id, password }) => {
+    const phoneNumber = parsePhoneNumber(id, country);
+    logInQuery({
+      variables: { input: { phoneNumber: phoneNumber || id, password } },
+    });
   };
   const buttonList = [
     {
