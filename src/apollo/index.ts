@@ -25,3 +25,16 @@ export const initializeApollo = () => {
 
   return apolloClient;
 };
+
+export { user, userVar, geo, geoVar, isLoggedIn, isLoggedInVar } from "./var";
+export type { UserVar } from "./var";
+export {
+  HELLO,
+  GET_GEO,
+  CREATE_USER,
+  SEND_VERIFY_CODE_USER,
+  CHECK_VERIFY_CODE_USER,
+  ME,
+  LOG_IN_LOCAL,
+} from "./gql";
+export { USER_FRAMGENT } from "./fragment";

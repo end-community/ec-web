@@ -16,7 +16,6 @@
         "baseUrl": ".",
         "paths": {
             "~/*":["src/*"],
-            "~var":["src/apollo/var"],
             "@/*":["./*"],
             "@gqlTypes/*": ["__generated__/*"],
         }

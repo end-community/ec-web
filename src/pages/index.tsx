@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { Header } from "~/components";
+import React from "react";
+import { Header } from "~/components/common";
 
 const HomePage: React.FC = () => {
   return (

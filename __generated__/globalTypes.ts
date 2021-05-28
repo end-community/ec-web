@@ -7,6 +7,11 @@
 // START Enums and Input Objects
 //==============================================================
 
+export enum SendVerifyCodeType {
+  FIND_PASSWORD = "FIND_PASSWORD",
+  REGISTER = "REGISTER",
+}
+
 export enum UserGender {
   FEMALE = "FEMALE",
   MALE = "MALE",
@@ -35,15 +40,21 @@ export interface CreateUserInput {
   password: string;
 }
 
-export interface LogInUserInput {
+export interface LogInUserLocalInput {
   nickname?: string | null;
   phoneNumber?: string | null;
   password: string;
 }
 
+export interface LogInUserOauthInput {
+  provider: UserProvider;
+  oauthId?: string | null;
+}
+
 export interface SendVerifyCodeUserInput {
   phoneNumber?: string | null;
   email?: string | null;
+  type: SendVerifyCodeType;
 }
 
 //==============================================================

@@ -7,12 +7,12 @@ interface OauthProfile {
   provider: UserProvider.GOOGLE | UserProvider.FACEBOOK;
 }
 
-export interface CtxProviderProps {
+export interface AppCtxProviderProps {
   children: ReactNode;
-  value: [CtxValue, React.Dispatch<React.SetStateAction<CtxValue>>];
+  value: [AppCtxValue, React.Dispatch<React.SetStateAction<AppCtxValue>>];
 }
 
-export interface CtxValue {
+export interface AppCtxValue {
   gapiAuth: any;
   fbAuth: any;
   oauthProfile: OauthProfile;

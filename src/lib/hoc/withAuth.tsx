@@ -1,6 +1,6 @@
 import React from "react";
 import { useReactiveVar } from "@apollo/client";
-import { userVar } from "~var";
+import { userVar } from "~/apollo";
 import LogIn from "~/pages";
 
 const withAuth = (Page: any) => {

@@ -1,2 +1,2 @@
-export { default as CtxProvider, useCtx } from "./context";
-export type { CtxProviderProps, CtxValue } from "./context.d";
+export { default as AppCtxProvider, useAppCtx } from "./context";
+export type { AppCtxProviderProps, AppCtxValue } from "./context.d";
